@@ -1,0 +1,46 @@
+sudo: required
+
+env:
+  global:
+  - REPO=depost/init-vault
+  - COMMIT=${TRAVIS_COMMIT::8}
+  - CGO_ENABLED=0
+  - GOOS=linux
+  - GOARCH=amd64
+  - secure: dkUcWDL+kItD1KtEp2EoJMk5efY93tWNr5R8H9AGrw8bgcLIX8+OvSZe27+y+HvF8xCrvMNkFGtk7t1c2f0NTmx1ko5QdM6SGbNpLt55P+JBktWFDKKzHtYLcGO9uWdBI9jp0QHdZrIX132+KpC21iLfVbTdrZiJ/N3BuILYSNp7esLXfDdK4Ok6l4w2nDeqhFGIou/6yiQZoX/NkVO37Z4TRwewO7vRKHcpdokGuSYFTVhx9UUzo8b6rJWLCZmRjxFs49T91BGGI0onWFPIzdpcLMyl2zdE6MUWyDwZJogeNjeobZhN2IVWWYX5Kr/eoyBtlIcWsm+fzE8o2YG9D6bfGrHLZPe+mMmvYvvyPn72G4TC9rBrNxeILmIp9tPtAF8edp+otO0i4wCtBzv1dzfbsV5wDXy1pvgfSN36usFh0tWEgDkyeCgXpBC9rVo1wALXpfc+4lWfA1lG5wZtLmbXMOcZpvp3RHQ7U3hsmVcg9t3G+9mhcrX4GYrrnc4QpVbhUpiGSkDNWHkBuDVoIfuhMb5xY4JQgSwLippmfipH4Kd5D2gbGuaO1Z2mssig27ANbHsYm7aygP3/EnYSYPZxOtDHZAxCeh/91qGidxFPaoQs34awy/TnYmnR+kGEObOJrSWuePuS2s8bdp0mrejkdkSbTF9H9sKMT5Z6MKU=
+  - secure: YUY08QPpB1P95vbWRnzehwTtOvE+bQ0Kkhirwd6qfK/af83rDAprM0zYvaD/oGoCp5ao2yawZLuACakc7avJQdo429XBBkU00EDCVsHbZ8ciigR6boQmyiLPW6XGQAwwynsQ8kzen/tzHKxV+bZLnCEPNm8UsbmFxy5B1ceC0Rt8CtqsqDOq0pbmbA6Qqe3xnuVbsz9jHGzHnaxRAcK/X3LL7ka5iicj/RWygSRgfzWi5CRnnnLaE//SjQXvN/gD2sd0fsi+MTZLswQJliP2B2uI+ZqLzXriMzxF1H0FBRjrn95n3GSNGgUMBZ8rH11epGzNObSlqZAuMDT1SIddzmb9J5DldUjDnB8rDgxn6dUzRRL7mGUpzNJtNJOHVRVfSax2os69bXA0QT0p4mkmhFKr7Xd76yK4nj+tkJCBAazoxJGPzwrB+lU6s9t+8LmZcgeJIA/sARt6s89CTuGtc1MOIdhGYHtY11fXD89oHuTFTZqZ9N7C7ByAYCSlBrFl43A4tj+CsTd6XRWu796A7G0fVQ1UnQdJyENtnAVhLS2Z4FmDUrNJBkGqA4UxxXchNMDwE78WdPsZ25OuaRtAFV5uiPbKbwDXrG7RtjoPCQGVVgBlrpiBeHjeQaZtx9zf/gcf2h960Oz6VKwV+Ndgo5uTXdQn+6oQDMkV0EaM70Q=
+
+language: go
+
+go:
+- 1.9
+
+services:
+- docker
+
+branches:
+  only:
+  - master
+
+before_script:
+- export TZ=Pacific/Auckland
+- export "PATH=/home/travis/gopath/bin:$PATH"
+- export TAG=`if [[ $TRAVIS_PULL_REQUEST == "false" ]] && [[ $TRAVIS_BRANCH == "master"
+  ]]; then echo "latest"; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi`
+
+install:
+- go get -u github.com/golang/dep/cmd/dep
+- dep ensure
+
+script:
+- go vet -x ./...
+- go build -v ./...
+- go test -v ./...
+- docker build -t $REPO:$TAG -f Dockerfile .
+
+after_success:
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
+- if [[ $TRAVIS_PULL_REQUEST == "false" ]] && [[ $TRAVIS_BRANCH == "master" ]]; then
+  docker tag $REPO:$TAG $REPO:$TRAVIS_BUILD_NUMBER; docker push $REPO:$TRAVIS_BUILD_NUMBER;
+  fi
+- docker push $REPO:$TAG
