@@ -22,16 +22,16 @@ branches:
   only:
   - master
 
+install:
+- curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
 before_script:
 - export TZ=Pacific/Auckland
 - export "PATH=/home/travis/gopath/bin:$PATH"
 - export TAG=`if [[ $TRAVIS_PULL_REQUEST == "false" ]] && [[ $TRAVIS_BRANCH == "master"
   ]]; then echo "latest"; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi`
 - go vet -x ./...
-
-install:
-- curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-- dep ensure
+- dep ensure  
 
 script:
 - go build -v ./...
