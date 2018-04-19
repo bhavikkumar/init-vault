@@ -85,9 +85,10 @@ func UnsealVault(client *api.Client, keys []string, sealStatus *api.SealStatusRe
 		progress, err := client.Sys().Unseal(keys[count])
 		if err != nil {
 			log.Error().Err(err).Msg("Error during unseal process")
+		} else {
+			sealStatus = progress
+			count++
 		}
-		sealStatus = progress
-		count++
 	}
 }
 
