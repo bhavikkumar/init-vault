@@ -13,7 +13,7 @@ env:
 language: go
 
 go:
-- 1.10
+- 1.9
 
 services:
 - docker
@@ -22,18 +22,18 @@ branches:
   only:
   - master
 
-install:
-- curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-
 before_script:
 - export TZ=Pacific/Auckland
 - export "PATH=/home/travis/gopath/bin:$PATH"
 - export TAG=`if [[ $TRAVIS_PULL_REQUEST == "false" ]] && [[ $TRAVIS_BRANCH == "master"
   ]]; then echo "latest"; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi`
-- go vet -x ./...
-- dep ensure  
+
+install:
+- go get -u github.com/golang/dep/cmd/dep
+- dep ensure
 
 script:
+- go vet -x ./...
 - go build -v ./...
 - go test -v ./...
 - docker build -t $REPO:$TAG -f Dockerfile .
