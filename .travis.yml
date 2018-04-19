@@ -13,7 +13,7 @@ env:
 language: go
 
 go:
-- 1.9
+- 1.10
 
 services:
 - docker
