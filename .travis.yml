@@ -8,7 +8,7 @@ env:
   - GOOS=linux
   - GOARCH=amd64
   - secure: Z3HLW8J50vWLF5TMUmA2c+lw2Y4YWoB4U+6qmW8jcidfWNh1NknTpWUuYy7+VpXq5mrXnEhBf8/xwiFMcuO9gns8A2QZgrteuXDHqV7pnRvKojYuLlH9Uxc0bYLhLIxhtg8iQ/HZWUnzja+q9PX9jmtZscYUf8ggyyYOaaxTYOK3aVnWY19v9NwfhJiR7q695N8ZQ0Z/OKAi9SFM0R+V7RZSuv6f5MRmuou2X/E9JrbQSjpNJq1cXmvLRwlO3Oz+velX80t7xLWMr4hBppcaI4DdLAPzhusnV+tvRA3PxcGRB2DO7FKyYGlIaoRIGRNEfu34RODogsrVnyb1aQxhiHw7TXOo6u/azZ9JP5eIK9nXSQ8BmbsrsqdXyC536n86s8SHWDxcVT8hTX0/tx4uJKUlhXnYLuKdV7TJjdtnyG+BonKuyit/DoO0GD3LSflgopM0KlmW7llv98yxfSQheJfIY53oHejDM8bFmro/yxSjZkoxOa/vwSO17XwAGU1Uv60r5C6Ud0N8oN7oMSnpQeu5O6p6IoDBOJAvH3pxbdkcK7C17BTQQS9a+8U9CXBKu2m8nfZuwzZ1VGQPyTDY0z+gLMCdd5+0S4nVz0DfQnbdI0ubbY9HFHCO9aiben4ZJODynzj39WjbLXNSPVm1hOWhEkd0DBacMxzdRoAayOg=
-  - secure: UoyGvkjiqTDxZKFpox/oiyKweVIBjwvTM72d4ismR/pAc8bkvoFt64/rFlU6Qb+8tpRh0z+/LFkRwbIpszHuGFEgIWB4+O3xRM8e9yawiswBzwTOTPS3+aSivWbDOmAowvEXu3I6dBaqS++Jbo5A7rpX15lH1bRQpvwTPCRWqAgY5dYyiD+azVC13WtRuqisTH4Do4eHLXVfDMlwsgDq4de3jSpxtI16TRnpNTxJISfJ47atbve9mda4DLa44IRw0rj+9DgR7bj/FGuniaOWImf87urxf1vaeXPQ7HYYG3zmIDfPEExFfKX/PU/zyFjmhCY4VMlylzjLRimnwe4QPbLwp8mqDo8+YxvJIJdmWz5STqSGxK+Vem+MVSP8XOuCoZkAuLPe9WsYFrpf78hCIa7CWm7RpVJiN5GeXD7lkvQ125/2xi3njmEz8adQ1nmV5WdmIhA5I32ZqDIutSS1GhJ6TAOnRxL2jaZMBnPGUDKpH4SQSNCG7RpI54uBOoJBjfJz1gA094wdXgtULEaOcjKpr+VQGH2ZcBvj+iTp9bsN0NjCskC9bZhTKZcwZY2ZRSyOazYGY9Lf7vgwjbLSm5FfYDYpvaiBGEOI9H2Ma5R3EpQAzqrDeZHsIgyOqVfhaL/a73Jyzf+vGU7dGVhURhjbsQhRavfqsZmzv7Bs3uY=  
+  - secure: UoyGvkjiqTDxZKFpox/oiyKweVIBjwvTM72d4ismR/pAc8bkvoFt64/rFlU6Qb+8tpRh0z+/LFkRwbIpszHuGFEgIWB4+O3xRM8e9yawiswBzwTOTPS3+aSivWbDOmAowvEXu3I6dBaqS++Jbo5A7rpX15lH1bRQpvwTPCRWqAgY5dYyiD+azVC13WtRuqisTH4Do4eHLXVfDMlwsgDq4de3jSpxtI16TRnpNTxJISfJ47atbve9mda4DLa44IRw0rj+9DgR7bj/FGuniaOWImf87urxf1vaeXPQ7HYYG3zmIDfPEExFfKX/PU/zyFjmhCY4VMlylzjLRimnwe4QPbLwp8mqDo8+YxvJIJdmWz5STqSGxK+Vem+MVSP8XOuCoZkAuLPe9WsYFrpf78hCIa7CWm7RpVJiN5GeXD7lkvQ125/2xi3njmEz8adQ1nmV5WdmIhA5I32ZqDIutSS1GhJ6TAOnRxL2jaZMBnPGUDKpH4SQSNCG7RpI54uBOoJBjfJz1gA094wdXgtULEaOcjKpr+VQGH2ZcBvj+iTp9bsN0NjCskC9bZhTKZcwZY2ZRSyOazYGY9Lf7vgwjbLSm5FfYDYpvaiBGEOI9H2Ma5R3EpQAzqrDeZHsIgyOqVfhaL/a73Jyzf+vGU7dGVhURhjbsQhRavfqsZmzv7Bs3uY=
 
 language: go
 
@@ -24,12 +24,11 @@ branches:
 
 before_script:
 - export TZ=Pacific/Auckland
-- export "PATH=/home/travis/gopath/bin:$PATH"
 - export TAG=`if [[ $TRAVIS_PULL_REQUEST == "false" ]] && [[ $TRAVIS_BRANCH == "master"
   ]]; then echo "latest"; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi`
 
 install:
-- go get -u github.com/golang/dep/cmd/dep
+- curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 - dep ensure
 
 script:
