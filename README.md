@@ -8,11 +8,11 @@ This project uses dep so it must be on your path to begin with.
 ```
 dep ensure
 go build
-docker build -t init-vault
+docker build -t init-vault .
 ```
 
 ## Running the container
-The container needs the certificate bundle since it
+The container can be run using the following command and passing environment variables where required.
 ```
-docker run --restart=no -e DYNAMODB_TABLE=$DYNAMODB_TABLE  -e 'VAULT_SCHEME=http' depost/init-vault:latest
+docker run --restart=no -e DYNAMODB_TABLE=$DYNAMODB_TABLE  -e 'VAULT_SKIP_VERIFY=true' bhavikk/init-vault:latest
 ```
